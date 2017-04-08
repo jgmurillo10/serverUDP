@@ -2,11 +2,13 @@
 package server;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -62,7 +64,6 @@ public class ServerThread extends Thread{
 					BufferedOutputStream bos = new BufferedOutputStream(fos);
 
 					bos.write(contentInBytes);
-					System.out.println("-------PUDO--------");
 					bos.flush();
 					
 				} catch (Exception e) {
@@ -72,15 +73,36 @@ public class ServerThread extends Thread{
 			}
 
 			else{
-				try(    
-					FileWriter fw = new FileWriter("./data"+cliente + ".txt", true);
-					BufferedWriter bw = new BufferedWriter(fw);
-					PrintWriter out = new PrintWriter(bw)){
+				
+				try{  
+					    FileWriter fw = new FileWriter("./data"+cliente + ".txt", true);
+					    BufferedWriter bw = new BufferedWriter(fw);
+						PrintWriter out = new PrintWriter(bw);
+						FileReader rd = new FileReader("./data" + cliente + ".txt");
+						BufferedReader br= new BufferedReader(rd);
+						String ultima = null;
+						String line = null;
+						while((line = br.readLine())!= null){
+							System.out.println(line);
+							ultima = line;
+						}
+						String[] s = ultima.split(":");
+						String[] s2 = content.split(":");
+						int ult = Integer.parseInt(s[0]);
+						int act = Integer.parseInt(s2[0]);
+						if( ult +1 != act){
+							out.wait();
+						}
+						else{
 					out.println("\n"+content);
+					synchronized (out) {
+						out.notifyAll();
+					}
 					out.close();
 					bw.close();
 					fw.close();
-				}  
+					
+				}  }
 				catch( IOException e ){
 					// File writing/opening failed at some stage.
 				}
