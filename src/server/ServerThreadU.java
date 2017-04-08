@@ -22,20 +22,15 @@ import java.util.concurrent.TimeUnit;
 
 
 
-public class ServerThread extends Thread{
-	private DatagramPacket receivePacket;
-	private byte[] sendData;
-	private DatagramSocket serverSocket;
-	private byte[] receiveData;
+public class ServerThreadU {
+	
 	private InetAddress IPAddress;
 	private int PORT;
 	public boolean nuevo;
 	public String content;
-	public ServerThread (DatagramPacket receivePacket, byte[] sendData, DatagramSocket serverSocket, byte[] receiveData, InetAddress IPAddress, int PORT, boolean nuevo,String content){
-		this.receivePacket= receivePacket;
-		this.receiveData= receiveData;
-		this.sendData = sendData;
-		this.serverSocket= serverSocket;
+	
+	public ServerThreadU ( InetAddress IPAddress, int PORT, boolean nuevo,String content){
+	
 		this.IPAddress=IPAddress;
 		this.PORT=PORT;
 		this.nuevo=nuevo;
@@ -46,17 +41,18 @@ public class ServerThread extends Thread{
 	}
 
 
-	@Override
-	public void run() {
+	
+	public void escribir() {
 		// TODO Auto-generated method stub
 
-		super.run();
+		
 		System.out.println("packet received");
 		String cliente = IPAddress + "," + PORT + "";
 
 		try{
+			String content2 = content + "\n";
 
-			byte[] contentInBytes = content.getBytes();
+			byte[] contentInBytes = content2.getBytes();
 			if(nuevo){
 
 				try {
@@ -79,7 +75,7 @@ public class ServerThread extends Thread{
 					BufferedWriter bw = new BufferedWriter(fw);
 					PrintWriter out = new PrintWriter(bw);
 
-					out.println("\n"+content);
+					out.println(content);
 
 					out.close();
 					bw.close();
@@ -96,14 +92,14 @@ public class ServerThread extends Thread{
 			e.printStackTrace();
 		}
 
-
+/*
 		String sentence = new String(receiveData);
 		//String sentence = new String(receivePacket.getData(), 0, receivePacket.getLength());
 		System.out.println(sentence);
 		//InetAddress IPAddress = receivePacket.getAddress();
 		System.out.println("get address " + IPAddress );
 		//int port = receivePacket.getPort();
-		System.out.println("get port " + PORT);
+		System.out.println("get port " + PORT);*/
 
 
 	}
