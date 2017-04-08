@@ -40,32 +40,32 @@ public class ServerThread extends Thread{
 		this.PORT=PORT;
 		this.nuevo=nuevo;
 		this.content=content;
-		
+
 
 
 	}
-	
+
 
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		
+
 		super.run();
 		System.out.println("packet received");
 		String cliente = IPAddress + "," + PORT + "";
-		
+
 		try{
-			
+
 			byte[] contentInBytes = content.getBytes();
 			if(nuevo){
-				
+
 				try {
 					FileOutputStream fos = new FileOutputStream(new File("./data",cliente + ".txt"));
 					BufferedOutputStream bos = new BufferedOutputStream(fos);
 
 					bos.write(contentInBytes);
 					bos.flush();
-					
+
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -73,36 +73,19 @@ public class ServerThread extends Thread{
 			}
 
 			else{
-				
+
 				try{  
-					    FileWriter fw = new FileWriter("./data"+cliente + ".txt", true);
-					    BufferedWriter bw = new BufferedWriter(fw);
-						PrintWriter out = new PrintWriter(bw);
-						FileReader rd = new FileReader("./data" + cliente + ".txt");
-						BufferedReader br= new BufferedReader(rd);
-						String ultima = null;
-						String line = null;
-						while((line = br.readLine())!= null){
-							System.out.println(line);
-							ultima = line;
-						}
-						String[] s = ultima.split(":");
-						String[] s2 = content.split(":");
-						int ult = Integer.parseInt(s[0]);
-						int act = Integer.parseInt(s2[0]);
-						if( ult +1 != act){
-							out.wait();
-						}
-						else{
+					FileWriter fw = new FileWriter("./data"+cliente + ".txt", true);
+					BufferedWriter bw = new BufferedWriter(fw);
+					PrintWriter out = new PrintWriter(bw);
+
 					out.println("\n"+content);
-					synchronized (out) {
-						out.notifyAll();
-					}
+
 					out.close();
 					bw.close();
 					fw.close();
-					
-				}  }
+
+				}  
 				catch( IOException e ){
 					// File writing/opening failed at some stage.
 				}
@@ -125,7 +108,7 @@ public class ServerThread extends Thread{
 
 	}
 
-	
+
 
 
 }

@@ -57,7 +57,8 @@ class ServerUDP {
 			}
 			String linea = new String(receiveData);
 			String[] s=linea.split("=");
-			String seq = String.valueOf(s[1].charAt(0));
+			String[] s1 = s[1].split("t");
+			String seq = s1[0];
 			String fecha = s[2];
 			DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 			Date fechaSalida = df.parse(fecha);
